@@ -1,300 +1,609 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Lexend+Exa:wght@100..900&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/************************************************
+CSS Styles for CSE Motors
+************************************************/
 
+/* ------------------------------
+   1.0 @imports
+------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600&family=Lexend+Exa:wght@300;400;600&family=Tinos:wght@400;700&display=swap');
+
+/* ------------------------------
+   1.1 Root Variables (Unified)
+------------------------------ */
 :root {
-  --primary-bg: #00bcd4;
-  --primary-accent: #00bcd4;
-  --text-main: #242424;
-  --text-light: #fff;
-  --marker-color: #242424;
-  --info-bg: rgba(255,255,255,0.8);
-  --button-hover: #00bcd4;
+    --primary-bg: #00a9c2;
+    --primary-accent: #00b5d8;
+    --text-main: #222;
+    --text-light: #fff;
+    --marker-color: #222;
+    --info-bg: rgba(255,255,255,0.9);
+    --button-hover: #009ab8;
+    --border-soft: #e5e5e5;
+    --primary-text: #242333;
+    --main-accent: #01b0d3;
+    --valid: rgb(173, 243, 173);
+    --invalid: rgb(240, 200, 207);
+    --success-background: rgb(173, 243, 173);
+    --warning-background: rgb(240, 200, 207);
+    --notice-background: yellow;
+    --body-font: Inter, sans-serif;
+    --heading-font: Literata, serif;
 }
 
-/******* Change Box Model ***************/
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+/* ------------------------------
+   1.2 Box Model / Universal Styles
+------------------------------ */
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: var(--body-font);
 }
 
+img {
+    max-width: 100%;
+}
+
+h1, h2 {
+    font-size: 1.2em;
+    font-family: var(--heading-font);
+}
+
+label, input, textarea, select {
+    display: block;
+}
+
+textarea {
+    width: min(60ch, 100%);
+    min-height: 6rem;
+}
+
+input, select {
+    font-size: 1.25rem;
+}
+
+input[type='Submit'] {
+    font-size: larger;
+    background-color: var(--main-accent);
+    margin: 0.5rem 0 1rem 0;
+}
+
+/* ------------------------------
+   1.3 Header
+------------------------------ */
 header {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-}
-header a, .siteName a {
-  color: var(--text-main);
-  text-decoration: none;
-  font-size: larger;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
- .siteName a{
- 
-  font-weight: bolder;
-  font-size: clamp(1.5rem, 3vw, 2.5rem)
- }
+header a {
+    color: black;
+    font-size: large;
+    text-decoration: none;
+}
+
+.siteName a {
+  color: black;
+  text-decoration: none;
+  font-size: xx-large;
+  font-weight: bold;
+
+}
 
 #logoName {
-  font-size: 32px;
-  font-family: "Exo 2", sans-serif;
-  text-decoration: none;
-  color: var(--text-main);
+    font-family: "Exo 2", sans-serif;
+    font-size: 2rem;
+    color: var(--text-main);
+    text-decoration: none;
 }
 
 #accountLink {
-  font-size: 14px;
-  font-family: "Lexend Exa", sans-serif;
-  text-decoration: none;
-  color: var(--text-main);
+    font-size: 0.9rem;
+    color: var(--text-main);
+    text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Tinos", serif;
-  font-size: clamp(1.5rem, 3vw, 2.5rem)
-}
-
-p, a, button, li {
-  font-family: "Lexend Exa", sans-serif;
-}
-
- /*******************************************
-     Navigation
-    ********************************************/
-
+/* ------------------------------
+   1.4 Navigation
+------------------------------ */
 nav {
-  background-color: black;
-  color: var(--text-light);
-  font-size: 18px;
-  padding: 10px 0px 10px 0px;
-  
+    background: #111;
+    padding: 8px 0;
 }
 
 nav ul {
-  display: flex;
-  justify-content: space-evenly;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-top: .75rem;
-  cursor: pointer;
-  
-}
-
-nav li {
-  padding: 0.25rem 0.5rem;
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+    margin: 0;
+    list-style: none;
 }
 
 nav a {
-    color: var(--primary-text);
-    display: inline-block;
-    width: 4.5em;
-    padding: .25rem 0;
-    font-size: 1rem;
-  }
-
-  nav a:hover {
-    color: var(--primary-text);
-    background-color: var(--primary-background);
-  }
-
- /*******************************************
-     End Navigation
-    ********************************************/
-
-
-main {
-  padding: 0 10px 0 10px;
+    color: var(--text-light);
+    padding: 6px 12px;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.2s;
 }
 
-h1{
-  font-size: 22px;
-  color: var(--text-main);
+nav a:hover {
+    background: var(--primary-bg);
 }
 
+/* ------------------------------
+   1.5 Body / Wrapper
+------------------------------ */
+body {
+    margin: 0;
+}
+
+#wrapper {
+    width: 95%;
+    margin: 20px auto;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    outline: 3px solid var(--primary-accent);
+}
+
+/* ------------------------------
+   1.6 Footer
+------------------------------ */
+footer {
+    margin-top: 2rem;
+}
+
+footer p {
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+/* ------------------------------------------------
+   2. Component Styles
+------------------------------------------------ */
+
+/* ------------------------------
+   2.1 Hero - Home view
+------------------------------ */
 .delorean-container {
-  position: relative;
-  width: 100%;
-  max-width: 100vw;
-  overflow: hidden;
+    width: 100%;
+    text-align: center;
 }
 
-.delorean-container picture img,
-.delorean-container picture source {
-  display: block;
-  width: 100vw;
-  max-width: 85%;
-  height: auto;
-  margin: 40px;
+.delorean-container picture img {
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 20px auto;
 }
 
 .delorean-info {
-  position: absolute;
-  top: 100px;
-  left: 5px;
-  background: var(--info-bg);
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 2px 2px 12px rgba(0,0,0,0.15);
+    background: var(--info-bg);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
 }
 
-.delorean-container h2{
-  margin: 0;
-  font-size: 18px;
-  color: var(--primary-accent);
-}
-
-.delorean-container p{
-  margin: 5px 0 5px 0;
-  font-size: 16px;
-  color: var(--primary-accent);
+.delorean-container h2 {
+    color: var(--primary-accent);
 }
 
 .delorean-container button {
-  background-color: var(--primary-accent);
-  color: black;
-  border: none;
-  outline: none;
-  padding: 0.5rem 1.25rem;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
+    background: var(--primary-accent);
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 .delorean-container button:hover {
-  background-color: var(--button-hover);
+    background: var(--button-hover);
 }
 
-.multiple-grid>div {
-  margin-bottom: 40px;
-}
-
+/* ------------------------------
+   2.2 Review - Home view
+------------------------------ */
 .reviews-container ul {
-  list-style: disc;
-  padding-left: 1em;
-  margin-left: 0;
+    padding-left: 20px;
 }
 
-.reviews-container ul li {
-  font-size: 16px;
-  color: var(--text-main);
-  margin-bottom: 0.75em;
+.reviews-container li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
 }
 
-.reviews-container ul li::marker {
-  color: var(--marker-color);
+
+h1,
+h2 {
+font-size: 1.2em;
+font-family: var(--heading-font), serif;
 }
+
+img {
+max-width: 100%;
+}
+
+
+
+
+
+
+/* ------------------------------
+   2.2 General Sections
+------------------------------ */
+section ul {
+padding: 0 0 0 1rem;
+}
+
+section {
+margin-bottom: 2em;
+margin-top: 1em;
+}
+
+a figure {
+margin: 0;
+}
+
+figure img {
+display: block;
+margin: auto;
+padding-top: .5em;
+}
+
+figure figcaption {
+text-align: center;
+}
+
+/************************************************
+2. ID and Class Selectors
+************************************************/
+/* #hero (The main Delorean section) */
+#hero {
+background-image: url("/images/vehicles/delorean.jpg");
+background-repeat: no-repeat;
+background-size: contain;
+background-position: center;
+margin-left: auto;
+margin-right: auto;
+display: flex;
+}
+
+#hero h2 {
+margin-left: 0;
+}
+
+#hero a:hover {
+opacity: .5;
+}
+
+#hero li {
+list-style: none;
+color: var(--main-accent);
+}
+
+#hero li h2 {
+margin-top: 0;
+margin-bottom: 0;
+color: var(--main-accent);
+}
+
+#hero ul {
+padding-left: 0;
+margin-top: 0;
+max-width: 200px;
+margin-left: .5em;
+margin-bottom: 2rem;
+background-color: rgba(255, 255, 255, 0.7);
+}
+
+#hero li {
+font-size: .85em;
+}
+
+/* #actionbtn (The "Own Today" button) */
+#actionbtn {
+display: inline-block;
+max-width: 25vw;
+max-height: 10vh;
+padding: .5rem;
+background-color: var(--main-accent);
+color: var(--primary-text);
+font-weight: 800;
+border-radius: .25rem;
+}
+
+#actionbtn:hover {
+opacity: .5;
+}
+
+/* #review (The Reviews section) */
+#review li {
+font-size: .9em;
+margin-bottom: 1em;
+}
+
+/* ------------------------------
+   2.3 Add-ons - Home view
+------------------------------ */
+
+.flex {
+display: flex;
+margin-bottom: 2em;
+justify-content: center;
+width: 100%;
+padding-left: .25em;
+}
+
+.flex a {
+width: 100%;
+}
+
+/* .add-col (The colored box behind the upgrade image) */
+.add-col {
+background-color: var(--main-accent);
+height: 5.5em;
+width: 95%;
+border: var(--primary-text) solid 1px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #upgradesGrid {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: 1fr 1fr;
-}
-
-#upgradesGrid > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    grid-template-columns: 1fr 1fr ;
+    gap: 12px;
 }
 
 .upgrade-img-box {
-  width: 100%;
-  background: var(--primary-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 6px;
-  height: 90px;
+    height: 85px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--primary-accent);
+    padding: 2px;
+    border-radius: 6px;
 }
 
-#upgradesGrid img {
-  height: 70px;
-  width: auto;
-  object-fit: contain;
-  border-radius: 6px;
-  display: block;
-  background: var(--primary-accent);
-  padding: 5px;
+/* ------------------------------
+   2.4 Forms 
+------------------------------ */
+*[required]:focus:invalid {
+    background-color: var(--invalid);
 }
 
-#upgradesGrid a {
-  margin-bottom: 12px;
-  color: var(--primary-accent);
-  font-size: 16px;
+*[required]:focus:valid {
+    background-color: var(--valid);
+    color: var(--primary-text);
 }
 
-footer {
-  padding-left: 10px;
+#pswdBtn {
+    width: 12rem;
+    height: 40px;
+    padding: 0.5rem;
+    border: 1px solid #3a3a3a;
+    background-color: #3a3a3a;
+    color: #fff;
+    border-radius: 20px;
 }
 
-@media (min-width: 800px) {
-  body {
-    background: url('../images/site/checkerboard.jpg') repeat;
-  }
+#loginContainer,
+#registerContainer {
+    max-width: 30rem;
+    margin: 0 auto;
+    padding: 1rem 0.5rem;
+    background-color: var(--main-accent);
+    font-size: larger;
+    border-radius: 0.5rem;
+}
 
-  #wrapper {
-    width: 900px;
-    max-width: 90%;
-    margin: 30px auto;
-    background: white;
-    outline: 4px solid var(--primary-accent);
-    border-radius: 12px;
-    padding: 20px;
-  }
+/* ------------------------------
+   2.5 Vehicles - Classification view
+------------------------------ */
+#inv-display {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-  #logoName {
-    font-size: 48px;
-  }
+#inv-display li {
+    list-style: none;
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    text-align: center;
+}
 
-  #accountLink {
-    font-size: 20px;
-  }
+/* ------------------------------
+   2.6 Vehicle - Detail view
+------------------------------ */
+.detail-wrapper {
+    display: block;
+    padding: 1rem;
+}
 
-  h1 {
-    font-size: 28px;
-  }
+.detail-image img {
+    width: 100%;
+    border-radius: 8px;
+}
 
-  .delorean-info {
-    padding: 20px;
-  }
+/* ------------------------------------------------
+   3. Media Queries
+------------------------------------------------ */
+@media only screen and (min-width: 768px) {
+ /*******************************************
+  3.1 General
+ *******************************************/
+ h1 {
+ font-size: 1.9em;
+ grid-row: 1 / 1;
+ grid-column: 1 / 3;
+ }
+ 
+ /*******************************************
+ 3.4 Hero - Home (Delorean Info)
+ *******************************************/
+#hero ul {
+ font-size: 1.6em;
+ margin-left: 2em;
+ margin-top: 1em;
+}
 
-  .delorean-container h2{
-    font-size: 32px;
-  }
+ #actionbtn {
+ display: block;
+ width: 90%;
+ margin-top: 1.5em;
+ padding: 1rem;
+ background-color: var(--main-accent);
+ color: var(--primary-text);
+ font-weight: 800;
+ font-size: large;
+}
 
-  .delorean-container p{
-    margin: 10px 0 15px 0;
-    font-size: 24px;
-  }
+/*******************************************
+ 3.5 Review & Add-on - Home (Flex Layout)   
+ *******************************************/
+.flex-content {
+display: flex;
+justify-content: space-between;
+gap: 1vw;
+}
 
-  .delorean-container button {
-    font-size: 24px;
-  }
+#add-ons,
+#review {
+margin-top: 0;
+flex: 1 0 45%;
+}
 
-  .multiple-grid {
-    display: grid;
-    gap: 30px;
-    grid-template-columns: 1fr 1fr;
-  }
+#review h2,
+#add-ons h2 {
+font-size: 1.4em;
+margin-bottom: 2em;
+}
+
+#add-ons {
+order: -1;
+}
+
+#review li {
+font-size: 1.1em;
+}
+
+#add-ons {
+width: 45%;
+}
+}
 
 
-  .reviews-container {
-    grid-column: 2/3;
-    grid-row: 1/2;
-  }
 
-  .reviews-container ul li {
-    font-size: 20px;
-  }
 
-  .upgrade-container {
-    grid-column: 1/2;
-    grid-row: 1/2;
-  }
+
+
+@media only screen and (min-width: 768px){
+    body {
+      background: url('../images/site/checkerboard.jpg') repeat;    background-image:
+      linear-gradient(45deg, #000 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #000 75%),
+      linear-gradient(45deg, transparent 75%, #000 75%),
+      linear-gradient(45deg, #000 25%, #fff 25%);
+      background-size: 100px 100px;
+      background-position: 0 0, 0 0, -50px -50px, 50px 50px;
+
+    }
+
+    #wrapper {
+        width: 900px;
+        padding: 25px;
+    }
+
+    .delorean-container {
+        width: 80%;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .delorean-info {
+        position: absolute;
+        top: 70px;
+        left: 10px;
+        width: 260px;
+    }
+
+    .sections-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    #upgradesGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    #inv-display {
+        flex-flow: row wrap;
+        justify-content: space-evenly;
+    }
+
+    #inv-display li {
+        width: 250px;
+        height: 300px;
+    }
+
+    .detail-wrapper {
+        max-width: 1100px;
+        margin: 20px auto;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 30px;
+    }
+}
+@media only screen and (min-width: 1200px){
+    #wrapper {
+        width: 1100px;
+    }
 }

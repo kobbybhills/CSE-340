@@ -1,0 +1,96 @@
+<div class="regis-container">
+
+    <% if (title) { %>
+        <h1><%= title %></h1>
+    <% } else {
+        res.redirect('/')
+    } %>
+
+    <%- messages() %>
+
+    <% if (errors) { %>
+        <ul class="notice validation-errors">
+            <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+    <% } %>
+
+    <!-- Registration Form -->
+    <form action="/account/register" method="post" class="auth-form">
+
+        <div class="form-group">
+            <label for="accountFirstname">First Name</label>
+            <input 
+                type="text" 
+                id="accountFirstname" 
+                name="account_firstname" 
+                required 
+                placeholder="Enter first name"
+                value="<%= typeof account_firstname != 'undefined' ? account_firstname : '' %>"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="accountLastname">Last Name</label>
+            <input 
+                type="text" 
+                id="accountLastname" 
+                name="account_lastname" 
+                required 
+                placeholder="Enter last name"
+                value="<%= typeof account_lastname != 'undefined' ? account_lastname : '' %>"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="accountEmail">Email Address</label>
+            <input 
+                type="email" 
+                id="accountEmail" 
+                name="account_email" 
+                required 
+                placeholder="Enter valid email"
+                value="<%= typeof account_email != 'undefined' ? account_email : '' %>"
+            >
+        </div>
+
+        <div class="form-group password-group">
+            <label for="accountPassword">Password</label>
+            <!-- Updated pattern to require a minimum of 12 characters as per your request. Added title for client-side help. -->
+            <input 
+                type="password" 
+                id="accountPassword" 
+                name="account_password" 
+                required 
+                pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+                placeholder="Min 12 chars, 1 uppercase, 1 number, 1 symbol"
+                title="Password must be at least 12 characters and include an uppercase letter, lowercase letter, number, and special character."
+            >
+            <!-- Retaining password toggle for UX and accessibility -->
+            <button type="button" id="togglePassword" aria-label="Show password">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                    <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.972 0 9.188 3.226 10.677 7.697a11.838 11.838 0 0 1-1.323 3.485c-.71.97-.621 2.158.211 2.872a1.5 1.5 0 0 0 2.218-1.683 13.91 13.91 0 0 0-2.454-3.834C19.261 8.256 15.19 5.25 12 5.25c-3.19 0-7.261 3.006-8.868 7.684a13.91 13.91 0 0 0-2.454 3.834 1.5 1.5 0 0 0 2.218 1.683c.832-.714.921-1.9.211-2.872a11.838 11.838 0 0 1-1.323-3.485Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+        <button type="submit" class="button-primary">Create Account</button>
+    </form>
+
+    <p class="log">
+        Already have an account? <a href="/account/login">Login here</a>
+    </p>
+
+</div>
+
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function (e) {
+        const passwordInput = document.getElementById('accountPassword');
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+
+        // For a full implementation, you'd swap the SVG content or classes here
+    });
+</script>

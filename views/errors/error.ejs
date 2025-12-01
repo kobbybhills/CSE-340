@@ -1,0 +1,16 @@
+<h1 class="page-heading"><%= title %></h1>
+
+<div class="error-content">
+    <% if (message) { %>
+        <p class="error-message"><%= message %></p>
+    <% } else { %>
+     <p class="error-message">Looks like something went wrong on our end.</p>
+    <% } %>
+
+    <div class="error-image">
+            <!-- Using a placeholder/mock image path. You must ensure this path exists in your public folder. -->
+         <img src="/images/error-img/404.jpeg" alt="Error image" onerror="this.onerror=null; this.src='https://placehold.co/400x300/CCCCCC/333333?text=Error+Image'">
+    </div>
+
+    <p class="error-detail">Please try returning to the <a href="/">homepage</a>.</p>
+</div>

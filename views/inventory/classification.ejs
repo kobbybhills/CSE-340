@@ -1,0 +1,10 @@
+<%# Unit 3, Build Classification View activity %>
+<% if (title) { %>
+<h1><%= title %> </h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<%# messages() %>
+
+<%- grid %>

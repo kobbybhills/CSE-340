@@ -36,5 +36,5 @@ FROM public.inventory i
 WHERE c.classification_name = 'Sport';
 -- 6. Update image and thumbnail paths to include "/vehicles"
 UPDATE public.inventory
-SET inv_image = REPLACE(inv_image, '/images/', '/image/vehicles/'),
+SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
     inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');

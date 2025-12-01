@@ -1,0 +1,60 @@
+<div class="inventory-form-container">
+<% if (title) { %>
+<%# Dynamically setting the H1 title using make and model %>
+<h1 class="inventory-form-title">Delete <%= locals.inv_make %> <%= locals.inv_model %></h1>
+<% } else {
+res.redirect('/')
+} %>
+
+<%# Display any flash messages %>
+<%- messages() %>
+
+<%# Display validation errors %>
+<%- locals.errors %>
+
+<p class="form-notice form-notice--danger">
+    Warning: This action is permanent! Are you sure you want to delete this vehicle?
+</p>
+
+<%# The action points to the delete POST route %>
+<form class="inventory-form" action="/inv/delete" method="post">
+    
+    <fieldset class="form-fieldset">
+        <legend class="form-legend">Vehicle Details</legend>
+        
+        <div class="form-group form-group--read-only">
+            <label class="form-label" for="inv_make">Make:</label>
+            <input class="form-input" type="text" name="inv_make" id="inv_make" readonly
+                value="<%= locals.inv_make %>">
+        </div>
+
+        <div class="form-group form-group--read-only">
+            <label class="form-label" for="inv_model">Model:</label>
+            <input class="form-input" type="text" name="inv_model" id="inv_model" readonly
+                value="<%= locals.inv_model %>">
+        </div>
+        
+        <div class="form-group form-group--read-only">
+            <label class="form-label" for="inv_year">Year:</label>
+            <input class="form-input" type="number" name="inv_year" id="inv_year" readonly 
+                value="<%= locals.inv_year %>">
+        </div>
+
+        <div class="form-group form-group--read-only">
+            <label class="form-label" for="inv_price">Price ($):</label>
+            <input class="form-input" type="number" step="0.01" name="inv_price" id="inv_price" readonly 
+                value="<%= locals.inv_price %>">
+        </div>
+    </fieldset>
+    
+    <div class="form-actions form-actions--delete">
+        <button class="form-submit-btn form-submit-btn--danger" type="submit">Confirm Deletion</button>
+        <a href="/inv" class="button-link button-link--cancel">Cancel</a>
+    </div>
+    
+    <%# Hidden input is critical for the delete operation %>
+    <input type="hidden" name="inv_id" value="<%= locals.inv_id %>">
+</form>
+
+
+</div>
