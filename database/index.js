@@ -14,10 +14,14 @@ if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
       rejectUnauthorized: false,
     },
   });
-} else {
+}else {
+ // 🚨 FIX: Add SSL configuration for production deployment (Render)
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-  });
+      ssl: { 
+        rejectUnauthorized: false,
+ }, 
+});
 }
 
 /* **************************************

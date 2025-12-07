@@ -1,0 +1,17 @@
+<% if (messages) { %>
+    <% if (messages.notice) { %>
+        <div class="notice">
+            <p><%= messages.notice %></p>
+        </div>
+    <% } %>
+    
+    <% if (messages.error) { %>
+        <div class="error-list">
+            <ul>
+                <% messages.error.forEach(function(error) { %>
+                    <li><%= error %></li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } %>
+<% } %>

@@ -1,7 +1,8 @@
-/* ******************************************
+/**********************************************
  * This server.js file is the primary file of the
  * application. It is used to control the project.
- *******************************************/
+ **********************************************/
+
 /* ***********************
  * Require Statements
  *************************/
@@ -9,15 +10,16 @@ const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const env = require("dotenv").config();
 const app = express();
-const static = require("./routes/static");
+const staticRoute = require("./routes/static"); // Renamed 'static' to 'staticRoute' to avoid conflict later
 const baseController = require("./controllers/baseController");
 const inventoryRoute = require("./routes/inventoryRoute");
 const utilities = require("./utilities/index");
 const session = require("express-session");
 const pool = require("./database/");
+const path = require("path"); // <-- NEW: Required for serving static files absolutely
 
 /* ***********************
- * View Engine And Templates
+ * View Engine and Templates
  *************************/
 app.set("view engine", "ejs");
 app.use(expressLayouts);
@@ -25,7 +27,13 @@ app.set("layout", "./layouts/layout"); // not at views root
 
 /* ***********************
  * Middleware
- * ************************/
+ *************************/
+
+// Body Parsers - MUST be at the top for form handling
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Session Management
 app.use(
   session({
     store: new (require("connect-pg-simple")(session))({
@@ -39,7 +47,7 @@ app.use(
   })
 );
 
-// Express Messages Middleware
+// Flash Messages Middleware
 app.use(require("connect-flash")());
 app.use(function (req, res, next) {
   res.locals.messages = require("express-messages")(req, res);
@@ -47,32 +55,44 @@ app.use(function (req, res, next) {
 });
 
 /* ***********************
+ * Static File Middleware (CRITICAL ADDITION)
+ * ***********************/
+// Tells Express to look inside the 'public' folder for files like CSS, JS, and images.
+// This resolves the 'Uncaught SyntaxError' by serving the correct file instead of HTML.
+app.use(express.static(path.join(__dirname, "public"))); // <-- ADDED THIS LINE
+
+
+/* ***********************
  * Routes
  *************************/
-app.use(static);
-//Index Route
+
+// Static routes
+app.use(staticRoute); // Uses the renamed variable
+
+// Home route
 app.get("/", utilities.handleErrors(baseController.buildHome));
 
 // Inventory routes
 app.use("/inv", inventoryRoute);
 
-// File Not Found Route - must be last route in list
+// File Not Found Route - must be last
 app.use(async (req, res, next) => {
   next({ status: 404, message: "Sorry, we appear to have lost that page." });
 });
 
 /* ***********************
  * Express Error Handler
- * Place after all other middleware
+ * Must be last middleware
  *************************/
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav();
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-  if (err.status == 404) {
-    message = err.message;
-  } else {
-    message = "Oh no! There was a crash. Maybe try a different route?";
-  }
+  console.error(`Error at "${req.originalUrl}": ${err.message}`);
+
+  let message =
+    err.status == 404
+      ? err.message
+      : "Oh no! There was a crash. Maybe try a different route?";
+
   res.render("errors/error", {
     title: err.status || "Server Error",
     message,
@@ -82,14 +102,14 @@ app.use(async (err, req, res, next) => {
 
 /* ***********************
  * Local Server Information
- * Values from .env (environment) file
+ * Values from .env file
  *************************/
 const port = process.env.PORT;
 const host = process.env.HOST;
 
 /* ***********************
- * Log statement to confirm server operation
+ * Start Server
  *************************/
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`);
+  console.log(`App listening on ${host}:${port}`);
 });

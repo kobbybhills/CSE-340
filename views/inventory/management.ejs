@@ -1,0 +1,37 @@
+<% if (title) { %>
+    <h1><%- title %></h1>
+<% } %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+    <ul class="error-list">
+        <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+        <% }) %>
+    </ul>
+<% } %>
+
+<div class="management-container">
+    <h2>Inventory Management Actions</h2>
+
+    <div class="management-actions">
+        <p><a href="/inv/add-classification" class="form-submit-btn">Add New Classification</a></p>
+        <p><a href="/inv/add-inventory" class="form-submit-btn">Add New Vehicle</a></p>
+    </div>
+
+    <h2>Manage Inventory</h2>
+    
+    <p>Select a classification from the list to see the inventory available for that classification.</p>
+    
+    <% if (classificationList) { %>
+        <%- classificationList %>
+    <% } else { %>
+        <p class="notice">Classification data could not be loaded.</p>
+    <% } %>
+
+    <table id="inventoryDisplay"></table>
+    
+</div>
+
+<script src="/js/inventory.js"></script>

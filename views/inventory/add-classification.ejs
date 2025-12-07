@@ -1,0 +1,38 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+<% } else {
+    res.redirect('/')
+} %>
+
+<div class="form-container">
+    
+    <%- messages() %>
+    
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+    <% } %>
+
+    <p class="notice">New classification name cannot contain spaces or special characters.</p>
+
+    <form action="/inv/add-classification" method="post" class="inventory-form">
+        
+        <label for="classification_name">Classification Name:</label>
+        <input 
+            type="text" 
+            name="classification_name" 
+            id="classification_name" 
+            
+            required 
+            pattern="^[a-zA-Z0-9]+$" 
+            title="Only letters and numbers are allowed (no spaces or special characters)."
+            
+            value="<%= classification_name %>" 
+        >
+
+        <button type="submit">Add Classification</button>
+    </form>
+</div>

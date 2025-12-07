@@ -1,0 +1,134 @@
+<div class="management-container">
+  <h1><%= title %></h1>
+
+  <%- messages() %>
+
+  <div class="management-actions">
+    <a href="/inv/add-classification" class="btn">Add New Classification</a>
+    <a href="/inv/add-inventory" class="btn">Add New Vehicle</a>
+    <a href="/inv" class="btn">Back to Inventory Management</a>
+  </div>
+
+  <h2>Edit Vehicle Information</h2>
+  <p>Modify the details below and submit to update the inventory item:</p>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="error-messages notice">
+      <ul>
+        <% errors.forEach(function (err) { %>
+          <li><%= err.msg %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <form action="/inv/update" method="post" class="inventory-form" id="updateForm">
+    <p class="notice">* All fields are required</p>
+
+    <input type="hidden" name="inv_id" value="<%= inv_id %>">
+
+    <label for="inv_make">Make:</label>
+    <input
+      type="text"
+      id="inv_make"
+      name="inv_make"
+      value="<%= inv_make %>"
+      required
+      minlength="3"
+    >
+
+    <label for="inv_model">Model:</label>
+    <input
+      type="text"
+      id="inv_model"
+      name="inv_model"
+      value="<%= inv_model %>"
+      required
+      minlength="3"
+    >
+
+    <label for="inv_year">Year:</label>
+    <input
+      type="number"
+      id="inv_year"
+      name="inv_year"
+      value="<%= inv_year %>"
+      required
+      min="1900"
+      max="<%= new Date().getFullYear() + 1 %>"
+    >
+
+    <label for="inv_price">Price ($):</label>
+    <input
+      type="number"
+      id="inv_price"
+      name="inv_price"
+      value="<%= inv_price %>"
+      required
+      step="0.01"
+      min="0"
+    >
+
+    <label for="inv_miles">Mileage:</label>
+    <input
+      type="number"
+      id="inv_miles"
+      name="inv_miles"
+      value="<%= inv_miles %>"
+      required
+      min="0"
+    >
+
+    <label for="inv_color">Color:</label>
+    <input
+      type="text"
+      id="inv_color"
+      name="inv_color"
+      value="<%= inv_color %>"
+      required
+    >
+
+    <label for="inv_description">Description:</label>
+    <textarea
+      id="inv_description"
+      name="inv_description"
+      required
+    ><%= inv_description %></textarea>
+
+    <label for="inv_image">Image URL:</label>
+    <input
+      type="text"
+      id="inv_image"
+      name="inv_image"
+      value="<%= inv_image %>"
+      required
+      maxlength="255"
+      placeholder="/images/vehicles/image.jpg"
+    >
+
+    <label for="inv_thumbnail">Thumbnail URL:</label>
+    <input
+      type="text"
+      id="inv_thumbnail"
+      name="inv_thumbnail"
+      value="<%= inv_thumbnail %>"
+      required
+      maxlength="255"
+      placeholder="/images/vehicles/image-tn.jpg"
+    >
+
+    <label for="classificationList">Classification:</label>
+    <%- classificationList %>
+
+    <div class="form-actions">
+      <button type="submit" class="btn">Update Vehicle</button>
+      <a href="/inv" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+
+  <noscript>
+    <p class="notice">JavaScript must be enabled to use this page.</p>
+  </noscript>
+</div>
+
+<script src="/js/inv-update.js"></script>
