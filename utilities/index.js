@@ -82,14 +82,10 @@ Util.buildClassificationGrid = async function (data) {
 
 /* **************************************
  * Build the single vehicle detail HTML
- *
- * NOTE: This function has been updated to include
- * the necessary CSS class names for styling.
  * ************************************ */
 Util.buildSingleVehicleDisplay = async function (vehicle) {
   let html = ""
   
-  // Ensure the vehicle object is not null and is the expected format (not an array)
   const inv = vehicle;
 
   if (inv) {
@@ -110,7 +106,6 @@ Util.buildSingleVehicleDisplay = async function (vehicle) {
     // 2. Details Section
     html += '<div class="vehicle-details-text">'
     
-    // The main title is handled by the EJS view (<h1>)
     html += '<h2 class="details-heading">' + inv.inv_make + ' ' + inv.inv_model + ' Details</h2>'
     
     // Price (made prominent)
@@ -137,6 +132,7 @@ Util.buildSingleVehicleDisplay = async function (vehicle) {
 
 /* ****************************************
  * Middleware to check token validity
+ * (Runs on every request to load account data if token is present)
  **************************************** */
 Util.checkJWTToken = (req, res, next) => {
   if (req.cookies.jwt) {
@@ -158,6 +154,37 @@ Util.checkJWTToken = (req, res, next) => {
     next()
   }
 }
+
+/* ****************************************
+ * Middleware to check if user is logged in
+ * (Used to restrict access to any page)
+ * ************************************ */
+Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next()
+  } else {
+    req.flash("notice", "Please log in to access the restricted area.")
+    return res.redirect("/account/login")
+  }
+}
+
+/* ****************************************
+ * Check Account Type Middleware (Task 2: Authorization)
+ * (Used to restrict access to Employee/Admin pages)
+ * ************************************ */
+Util.checkAuthorization = (req, res, next) => {
+    // Check if user is logged in AND has the correct account type
+    if (res.locals.loggedin && 
+        (res.locals.accountData.account_type === 'Employee' || 
+         res.locals.accountData.account_type === 'Admin')) {
+        next(); // User is authorized, proceed
+    } else {
+        req.flash("notice", "You do not have the necessary permissions to access the management page.");
+        // Redirect to login is specified in the task on failure
+        return res.redirect("/account/login"); 
+    }
+}
+
 
 /* ****************************************
  * Middleware For Handling Errors

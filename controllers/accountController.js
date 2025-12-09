@@ -123,7 +123,8 @@ async function accountLogin(req, res, next) {
         });
 
         req.flash("success", `Welcome back, ${accountData.account_firstname}!`);
-        return res.redirect("/account/");
+        // FIX: Redirect without the trailing slash to resolve 404 issue on success
+        return res.redirect("/account"); 
 
     } catch (error) {
         next(error);
@@ -233,7 +234,8 @@ async function updateAccountInfo(req, res, next) {
         });
 
         req.flash("success", "Account information updated successfully.");
-        return res.redirect("/account/");
+        // FIX: Redirect without the trailing slash to resolve 404 issue on success
+        return res.redirect("/account");
     } catch (error) { next(error); }
 }
 
@@ -258,8 +260,8 @@ async function updatePassword(req, res, next) {
         }
 
         req.flash("success", "Password updated successfully.");
-        // Redirect to account management, which will use the existing JWT cookie
-        return res.redirect("/account/"); 
+        // FIX: Redirect without the trailing slash to resolve 404 issue on success
+        return res.redirect("/account"); 
     } catch (error) { next(error); }
 }
 

@@ -1,110 +1,104 @@
-<div class="update-container">
+<div id="wrapper">
+    <div class="update-container form-container">
 
-    <% if (title) { %>
-        <h1><%= title %></h1>
-    <% } else {
-        res.redirect('/')
-    } %>
+        <% if (title) { %>
+            <h1><%= title %></h1>
+        <% } else {
+            res.redirect('/')
+        } %>
 
-    <%- messages() %>
+        <%- messages() %>
 
-    <% if (errors) { %>
-        <ul class="notice validation-errors">
-            <% errors.forEach(error => { %>
-                <li><%= error.msg %></li>
-            <% }) %>
-        </ul>
-    <% } %>
+        <% if (errors) { %>
+            <ul class="error-list validation-errors">
+                <% errors.forEach(error => { %>
+                    <li><%= error.msg %></li>
+                <% }) %>
+            </ul>
+        <% } %>
 
-    <!-- 
-        ====================================================================
-        FORM 1: Update Account Information (First Name, Last Name, Email)
-        ==================================================================== 
-    -->
-    <section class="update-info-section">
-        <h2>Update Account Information</h2>
-        <p>Use the form below to update your name or email address.</p>
+        <section class="update-info-section inventory-form">
+            <h2>Update Account Information</h2>
+            <p>Use the form below to update your name or email address.</p>
 
-        <form id="updateAccountForm" action="/account/update/" method="post">
-            
-            <div class="form-group">
-                <label for="accountFirstname">First Name</label>
-                <input 
-                    type="text" 
-                    id="accountFirstname" 
-                    name="account_firstname" 
-                    required 
-                    value="<%= locals.accountData.account_firstname %>"
-                >
-            </div>
+            <form id="updateAccountForm" action="/account/update-info" method="post">
+                
+                <div class="form-group">
+                    <label for="accountFirstname" class="form-label">First Name</label>
+                    <input 
+                        type="text" 
+                        id="accountFirstname" 
+                        name="account_firstname" 
+                        required 
+                        value="<%= locals.accountData.account_firstname %>"
+                        class="form-input"
+                    >
+                </div>
 
-            <div class="form-group">
-                <label for="accountLastname">Last Name</label>
-                <input 
-                    type="text" 
-                    id="accountLastname" 
-                    name="account_lastname" 
-                    required 
-                    value="<%= locals.accountData.account_lastname %>"
-                >
-            </div>
+                <div class="form-group">
+                    <label for="accountLastname" class="form-label">Last Name</label>
+                    <input 
+                        type="text" 
+                        id="accountLastname" 
+                        name="account_lastname" 
+                        required 
+                        value="<%= locals.accountData.account_lastname %>"
+                        class="form-input"
+                    >
+                </div>
 
-            <div class="form-group">
-                <label for="accountEmail">Email Address</label>
-                <input 
-                    type="email" 
-                    id="accountEmail" 
-                    name="account_email" 
-                    required 
-                    value="<%= locals.accountData.account_email %>"
-                >
-            </div>
-            
-            <!-- Hidden input to submit the account ID for the update function -->
-            <input type="hidden" name="account_id" value="<%= locals.accountData.account_id %>">
+                <div class="form-group">
+                    <label for="accountEmail" class="form-label">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="accountEmail" 
+                        name="account_email" 
+                        required 
+                        value="<%= locals.accountData.account_email %>"
+                        class="form-input"
+                    >
+                </div>
+                
+                <input type="hidden" name="account_id" value="<%= locals.accountData.account_id %>">
 
-            <button type="submit" class="button-primary">Update Information</button>
-        </form>
-    </section>
-    
-    <!-- 
-        ====================================================================
-        FORM 2: Change Password
-        ==================================================================== 
-    -->
-    <section class="change-password-section">
-        <h2>Change Password</h2>
-        <p>Please enter a new, strong password below. This action will log you out immediately.</p>
+                <button type="submit" class="form-submit-btn">Update Information</button>
+            </form>
+        </section>
         
-        <form id="updatePasswordForm" action="/account/update/password" method="post">
+        <hr> <section class="change-password-section inventory-form">
+            <h2>Change Password</h2>
+            <p>Please enter a new, strong password below. This action will log you out immediately.</p>
             
-            <div class="form-group password-group">
-                <label for="accountPassword">New Password</label>
-                <input 
-                    type="password" 
-                    id="accountPassword" 
-                    name="account_password" 
-                    required 
-                    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
-                    placeholder="Min 12 chars, 1 uppercase, 1 number, 1 symbol"
-                    title="Password must be at least 12 characters and include an uppercase letter, lowercase letter, number, and special character."
-                >
-                <!-- Password toggle retained for UX -->
-                <button type="button" id="togglePassword" aria-label="Show password">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                        <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.972 0 9.188 3.226 10.677 7.697a11.838 11.838 0 0 1-1.323 3.485c-.71.97-.621 2.158.211 2.872a1.5 1.5 0 0 0 2.218-1.683 13.91 13.91 0 0 0-2.454-3.834C19.261 8.256 15.19 5.25 12 5.25c-3.19 0-7.261 3.006-8.868 7.684a13.91 13.91 0 0 0-2.454 3.834 1.5 1.5 0 0 0 2.218 1.683c.832-.714.921-1.9.211-2.872a11.838 11.838 0 0 1-1.323-3.485Z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- Hidden input to submit the account ID for the password update function -->
-            <input type="hidden" name="account_id" value="<%= locals.accountData.account_id %>">
+            <form id="updatePasswordForm" action="/account/update-password" method="post">
+                
+                <div class="form-group password-group">
+                    <label for="accountPassword" class="form-label">New Password</label>
+                    <input 
+                        type="password" 
+                        id="accountPassword" 
+                        name="account_password" 
+                        required 
+                        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+                        placeholder="Min 12 chars, 1 uppercase, 1 number, 1 symbol"
+                        title="Password must be at least 12 characters and include an uppercase letter, lowercase letter, number, and special character."
+                        class="form-input"
+                    >
+                    
+                    <button type="button" id="togglePassword" aria-label="Show password" style="background: none; border: none; cursor: pointer; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); padding: 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" style="width: 24px; height: 24px; color: var(--text-main);">
+                            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                            <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.972 0 9.188 3.226 10.677 7.697a11.838 11.838 0 0 1-1.323 3.485c-.71.97-.621 2.158.211 2.872a1.5 1.5 0 0 0 2.218-1.683 13.91 13.91 0 0 0-2.454-3.834C19.261 8.256 15.19 5.25 12 5.25c-3.19 0-7.261 3.006-8.868 7.684a13.91 13.91 0 0 0-2.454 3.834 1.5 1.5 0 0 0 2.218 1.683c.832-.714.921-1.9.211-2.872a11.838 11.838 0 0 1-1.323-3.485Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <input type="hidden" name="account_id" value="<%= locals.accountData.account_id %>">
 
-            <button type="submit" class="button-primary">Change Password</button>
-        </form>
-    </section>
+                <button type="submit" class="form-submit-btn">Change Password</button>
+            </form>
+        </section>
 
+    </div>
 </div>
 
 <script>

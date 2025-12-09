@@ -13,10 +13,12 @@ const app = express();
 const staticRoute = require("./routes/static"); // Renamed 'static' to 'staticRoute' to avoid conflict later
 const baseController = require("./controllers/baseController");
 const inventoryRoute = require("./routes/inventoryRoute");
+const accountRoute = require("./routes/accountRoute");
 const utilities = require("./utilities/index");
 const session = require("express-session");
 const pool = require("./database/");
-const path = require("path"); // <-- NEW: Required for serving static files absolutely
+const path = require("path");
+const cookieParser = require("cookie-parser"); // <-- NEW: Required for JWT
 
 /* ***********************
  * View Engine and Templates
@@ -35,31 +37,36 @@ app.use(express.urlencoded({ extended: true }));
 
 // Session Management
 app.use(
-  session({
-    store: new (require("connect-pg-simple")(session))({
-      createTableIfMissing: true,
-      pool,
-    }),
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-    name: "sessionId",
-  })
+    session({
+        store: new (require("connect-pg-simple")(session))({
+            createTableIfMissing: true,
+            pool,
+        }),
+        secret: process.env.SESSION_SECRET,
+        resave: true,
+        saveUninitialized: true,
+        name: "sessionId",
+    })
 );
 
 // Flash Messages Middleware
 app.use(require("connect-flash")());
 app.use(function (req, res, next) {
-  res.locals.messages = require("express-messages")(req, res);
-  next();
+    res.locals.messages = require("express-messages")(req, res);
+    next();
 });
+
+// Cookie Parser Middleware (MUST BE BEFORE JWT CHECK)
+app.use(cookieParser()); // <-- ADDED: To read the JWT cookie
+
+// JWT Token Check Middleware (MUST BE BEFORE RESTRICTED ROUTES)
+app.use(utilities.checkJWTToken); // <-- ADDED: To verify token and set res.locals.loggedin
 
 /* ***********************
  * Static File Middleware (CRITICAL ADDITION)
  * ***********************/
 // Tells Express to look inside the 'public' folder for files like CSS, JS, and images.
-// This resolves the 'Uncaught SyntaxError' by serving the correct file instead of HTML.
-app.use(express.static(path.join(__dirname, "public"))); // <-- ADDED THIS LINE
+app.use(express.static(path.join(__dirname, "public"))); 
 
 
 /* ***********************
@@ -67,7 +74,7 @@ app.use(express.static(path.join(__dirname, "public"))); // <-- ADDED THIS LINE
  *************************/
 
 // Static routes
-app.use(staticRoute); // Uses the renamed variable
+app.use(staticRoute); 
 
 // Home route
 app.get("/", utilities.handleErrors(baseController.buildHome));
@@ -75,9 +82,12 @@ app.get("/", utilities.handleErrors(baseController.buildHome));
 // Inventory routes
 app.use("/inv", inventoryRoute);
 
+// Account routes
+app.use("/account", accountRoute);
+
 // File Not Found Route - must be last
 app.use(async (req, res, next) => {
-  next({ status: 404, message: "Sorry, we appear to have lost that page." });
+    next({ status: 404, message: "Sorry, we appear to have lost that page." });
 });
 
 /* ***********************
@@ -85,19 +95,19 @@ app.use(async (req, res, next) => {
  * Must be last middleware
  *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav();
-  console.error(`Error at "${req.originalUrl}": ${err.message}`);
+    let nav = await utilities.getNav();
+    console.error(`Error at "${req.originalUrl}": ${err.message}`);
 
-  let message =
-    err.status == 404
-      ? err.message
-      : "Oh no! There was a crash. Maybe try a different route?";
+    let message =
+        err.status == 404
+            ? err.message
+            : "Oh no! There was a crash. Maybe try a different route?";
 
-  res.render("errors/error", {
-    title: err.status || "Server Error",
-    message,
-    nav,
-  });
+    res.render("errors/error", {
+        title: err.status || "Server Error",
+        message,
+        nav,
+    });
 });
 
 /* ***********************
@@ -111,5 +121,5 @@ const host = process.env.HOST;
  * Start Server
  *************************/
 app.listen(port, () => {
-  console.log(`App listening on ${host}:${port}`);
+    console.log(`App listening on ${host}:${port}`);
 });

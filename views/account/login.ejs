@@ -1,56 +1,58 @@
-<div class="form-container">
-
+<div class="update-container form-container auth-form"> 
     <% if (title) { %>
         <h1><%= title %></h1>
-        <% } else {
-          res.redirect('/')
-        } %>
+    <% } else {
+        res.redirect('/')
+    } %>
 
     <%- messages() %>
 
-    <% if (errors) { %>
-        <ul class="notice validation-errors">
-            <% errors.forEach(error => { %>
+    <% if (errors && errors.array().length > 0) { %>
+        <ul class="error-list validation-errors">
+            <% errors.array().forEach(error => { %> 
                 <li><%= error.msg %></li>
             <% }) %>
         </ul>
     <% } %>
 
-    <form id="loginForm" action="/account/login" method="post" class="login-form">
+    <section class="login-info-section inventory-form">
+        <h2>Please Log In</h2>
 
-        <div class="form-group">
-            <label for="accountEmail">Email Address</label>
-            <input 
-                type="email" 
-                id="accountEmail" 
-                name="account_email" 
-                required 
-                placeholder="Enter valid email"
-                value="<%= typeof account_email != 'undefined' ? account_email : '' %>"
-            >
-        </div>
+        <form id="loginForm" action="/account/login" method="post" class="login-form">
 
-        <div class="form-group password-group">
-            <label for="accountPassword">Password</label>
-            <!-- The pattern attribute is used to meet the password requirement assignment -->
-            <input 
-                type="password" 
-                id="accountPassword" 
-                name="account_password" 
-                required 
-                pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$"
-                placeholder="Min 8 chars, 1 uppercase, 1 number, 1 symbol"
-            >
-            <button type="button" id="togglePassword" aria-label="Show password">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                    <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.972 0 9.188 3.226 10.677 7.697a11.838 11.838 0 0 1-1.323 3.485c-.71.97-.621 2.158.211 2.872a1.5 1.5 0 0 0 2.218-1.683 13.91 13.91 0 0 0-2.454-3.834C19.261 8.256 15.19 5.25 12 5.25c-3.19 0-7.261 3.006-8.868 7.684a13.91 13.91 0 0 0-2.454 3.834 1.5 1.5 0 0 0 2.218 1.683c.832-.714.921-1.9.211-2.872a11.838 11.838 0 0 1-1.323-3.485Z" clip-rule="evenodd" />
-                </svg>
-            </button>
-        </div>
+            <div class="form-group">
+                <label for="accountEmail" class="form-label">Email Address</label>
+                <input 
+                    type="email" 
+                    id="accountEmail" 
+                    name="account_email" 
+                    required 
+                    placeholder="Enter valid email"
+                    value="<%= typeof account_email != 'undefined' ? account_email : '' %>"
+                    class="form-input" >
+            </div>
 
-        <button type="submit" class="button-primary">Login</button>
-    </form>
+            <div class="form-group password-group">
+                <label for="accountPassword" class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    id="accountPassword" 
+                    name="account_password" 
+                    required 
+                    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$"
+                    placeholder="Min 8 chars, 1 uppercase, 1 number, 1 symbol"
+                    class="form-input" >
+                <button type="button" id="togglePassword" aria-label="Show password">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                        <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.972 0 9.188 3.226 10.677 7.697a11.838 11.838 0 0 1-1.323 3.485c-.71.97-.621 2.158.211 2.872a1.5 1.5 0 0 0 2.218-1.683 13.91 13.91 0 0 0-2.454-3.834C19.261 8.256 15.19 5.25 12 5.25c-3.19 0-7.261 3.006-8.868 7.684a13.91 13.91 0 0 0-2.454 3.834 1.5 1.5 0 0 0 2.218 1.683c.832-.714.921-1.9.211-2.872a11.838 11.838 0 0 1-1.323-3.485Z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <button type="submit" class="form-submit-btn">Login</button>
+        </form>
+    </section>
 
     <p class="register-link">
         Don't have an account? <a href="/account/register">Register here</a>
@@ -59,12 +61,10 @@
 </div>
 
 <script>
+    // Note: If you extracted this to a separate file, remove this script block.
     document.getElementById('togglePassword').addEventListener('click', function (e) {
         const passwordInput = document.getElementById('accountPassword');
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
-
-        // Change the eye icon SVG state if necessary (currently only toggles type)
-        // For a full implementation, you'd swap the SVG content or classes here
     });
 </script>

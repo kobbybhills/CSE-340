@@ -1,61 +1,54 @@
-<div class="account-dashboard">
+<div id="wrapper">
+    <div class="account-dashboard management-container">
 
-    <% if (title) { %>
-        <h1><%= title %></h1>
-    <% } else {
-        res.redirect('/')
-    } %>
+        <% if (title) { %>
+            <h1><%= title %></h1>
+        <% } else {
+            res.redirect('/')
+        } %>
 
-    <%- messages() %>
+        <%- messages() %>
 
-    <h2>Welcome, <%= locals.accountData.account_firstname %></h2>
+        <h2>
+            Welcome <%= locals.accountData.account_firstname %>
+            <% if (locals.accountData.account_type === 'Client') { %>
+                <span style="display: none;">Client</span>
+            <% } else { %>
+                (<%= locals.accountData.account_type %>)
+            <% } %>
+        </h2>
 
-    <div class="account-details">
-        <h3>Account Information</h3>
-        <table>
-            <tbody>
-                <tr>
-                    <th>Full Name:</th>
-                    <td><%= locals.accountData.account_firstname %> <%= locals.accountData.account_lastname %></td>
-                </tr>
-                <tr>
-                    <th>Email:</th>
-                    <td><%= locals.accountData.account_email %></td>
-                </tr>
-                <tr>
-                    <th>Account Type:</th>
-                    <td><%= locals.accountData.account_type %></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <p class="update-link">
-            <a href="/account/update" class="dashboard-link" title="Click to update name and email">Update Account Information (Name, Email)</a>
-        </p>
-        
-        <p class="update-link">
-            <a href="/account/update/password" class="dashboard-link" title="Click to change your password">Change Password</a>
-        </p>
-    </div>
-
-    <!-- 
-        Management Access Section: 
-        Restricted to Admin and Employee account types.
-    -->
-    <% if (locals.accountData.account_type === 'Admin' || locals.accountData.account_type === 'Employee') { %>
-        <div class="management-access">
-            <h3>Inventory Management Tools</h3>
-            <p>Access the links below to manage the inventory and classifications.</p>
-            <p class="management-link">
-                <a href="/inv/" class="admin-link" title="Go to the main inventory management view">Go to Inventory Management</a>
+        <div class="account-details">
+            <h3>Account Information</h3>
+            <table class="detail-list">
+                <tbody>
+                    <tr>
+                        <th>Full Name:</th>
+                        <td><%= locals.accountData.account_firstname %> <%= locals.accountData.account_lastname %></td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td><%= locals.accountData.account_email %></td>
+                    </tr>
+                    <tr>
+                        <th>Account Type:</th>
+                        <td><%= locals.accountData.account_type %></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p class="update-link">
+                <a href="/account/update" class="dashboard-link form-submit-btn" title="Click to update name and email">Update Account Information</a>
             </p>
-            <p class="management-link">
-                <a href="/inv/add-classification" class="admin-link" title="Add a new vehicle classification">Add New Classification</a>
-            </p>
-            <p class="management-link">
-                <a href="/inv/add-inventory" class="admin-link" title="Add a new vehicle to the inventory">Add New Vehicle</a>
-            </p>
+
+            <% if (locals.accountData.account_type === 'Admin' || locals.accountData.account_type === 'Employee') { %>
+                <section class="management-section">
+                    <h3>Inventory Management</h3>
+                    <p class="management-actions">
+                        <a href="/inv/" class="dashboard-link form-submit-btn" title="Click to access inventory management tools">Access Inventory Management</a>
+                    </p>
+                </section>
+            <% } %>
         </div>
-    <% } %>
-
+    </div>
 </div>

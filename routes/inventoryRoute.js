@@ -10,7 +10,12 @@ const inventoryValidate = require("../utilities/inventory-validation")
  * Route to build the Inventory Management view (Task 1)
  * URL: /inv/
  * ************************************ */
-router.get("/", utilities.handleErrors(inventoryController.buildManagement))
+router.get(
+    "/", 
+    utilities.checkLogin, 
+    utilities.checkAuthorization, // <-- CRITICAL FIX: Only Admin/Employee can access
+    utilities.handleErrors(inventoryController.buildManagement)
+)
 
 
 /* ************************************
@@ -30,12 +35,16 @@ router.get(
 // GET: Route to deliver the Add Classification view
 router.get(
     "/add-classification", 
+    utilities.checkLogin, 
+    utilities.checkAuthorization, // <-- SECURED
     utilities.handleErrors(inventoryController.buildAddClassification)
 )
 
 // POST: Route to handle the new classification submission
 router.post(
     "/add-classification",
+    utilities.checkLogin, 
+    utilities.checkAuthorization, // <-- SECURED
     inventoryValidate.classificationRules(), // Server-side validation
     inventoryValidate.checkClassificationData, // Check validation results (reloads form on error)
     utilities.handleErrors(inventoryController.processNewClassification)
@@ -49,14 +58,17 @@ router.post(
 // GET: Route to deliver the Add Inventory view
 router.get(
     "/add-inventory", 
+    utilities.checkLogin, 
+    utilities.checkAuthorization, // <-- SECURED
     utilities.handleErrors(inventoryController.buildAddInventory)
 )
 
 // POST: Route to handle the new inventory item submission
 router.post(
     "/add-inventory",
+    utilities.checkLogin, 
+    utilities.checkAuthorization, // <-- SECURED
     inventoryValidate.inventoryRules(), // Server-side validation
-    // FIX: Changed utilities.checkValidation to the dedicated checkInventoryData or checkUpdateData
     inventoryValidate.checkInventoryData, // Check validation results (reloads form on error)
     utilities.handleErrors(inventoryController.processNewInventory)
 )
@@ -69,14 +81,17 @@ router.post(
 // GET: Route to deliver the Edit Inventory view
 router.get(
     "/edit/:invId", 
+    utilities.checkLogin, 
+    utilities.checkAuthorization, // <-- SECURED
     utilities.handleErrors(inventoryController.buildEditView)
 );
 
 // POST: Route to handle the updated inventory item submission
 router.post(
     "/update", // The controller expects "/update" or the form action must match
+    utilities.checkLogin, 
+    utilities.checkAuthorization, // <-- SECURED
     inventoryValidate.inventoryRules(), // Validation rules
-    // FIX: Changed utilities.checkValidation to the dedicated checkUpdateData validator
     inventoryValidate.checkUpdateData,         // Check validation results
     utilities.handleErrors(inventoryController.processUpdateInventory)
 );
@@ -89,12 +104,16 @@ router.post(
 // GET: Route to build the Delete Confirmation view
 router.get(
     "/delete/:invId",
+    utilities.checkLogin, 
+    utilities.checkAuthorization, // <-- SECURED
     utilities.handleErrors(inventoryController.buildDeleteView)
 );
 
 // POST: Route to process the deletion
 router.post(
     "/delete",
+    utilities.checkLogin, 
+    utilities.checkAuthorization, // <-- SECURED
     utilities.handleErrors(inventoryController.processDeleteInventory)
 );
 
