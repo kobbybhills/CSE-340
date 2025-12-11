@@ -1,5 +1,6 @@
 const utilities = require("../utilities/")
 const accountModel = require("../models/account-model")
+const reviewModel = require("../models/review-model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
@@ -132,18 +133,30 @@ async function accountLogin(req, res, next) {
 }
 
 /* ****************************************
- * Deliver account management view
- * *************************************** */
+ * Deliver account management view
+ * *************************************** */
 async function buildManagement(req, res, next) {
     try {
         let nav = await utilities.getNav();
+        const accountData = res.locals.accountData; // Get data from JWT payload
+        const account_id = accountData.account_id;
+
+        // 1. Fetch user-specific reviews
+        const reviews = await reviewModel.getReviewsByAccountId(account_id);
+
+        // 2. Build the HTML list of reviews (We'll create this utility next)
+        const reviewsTable = await utilities.buildUserReviewTable(reviews);
+        
         res.render("account/management", {
-            title: "Account Management",
+            title: `Welcome, ${accountData.account_firstname}`, // Use a welcoming title
             nav,
             errors: null,
+            reviewsTable, // Pass the formatted table to the view
         });
     } catch (error) {
-        next(error);
+        // If an error occurs (e.g., fetching reviews fails), handle it gracefully
+        console.error("Error building management view:", error);
+        next(error); 
     }
 }
 

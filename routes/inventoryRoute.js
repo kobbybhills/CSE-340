@@ -3,9 +3,9 @@ const express = require("express")
 const router = new express.Router() 
 const inventoryController = require("../controllers/inventoryController")
 const utilities = require("../utilities")
-// Import the validation file
 const inventoryValidate = require("../utilities/inventory-validation") 
-
+const reviewValidate = require("../utilities/review-validation")
+const reviewController = require("../controllers/reviewController")
 /* ************************************
  * Route to build the Inventory Management view (Task 1)
  * URL: /inv/
@@ -92,7 +92,7 @@ router.post(
     utilities.checkLogin, 
     utilities.checkAuthorization, // <-- SECURED
     inventoryValidate.inventoryRules(), // Validation rules
-    inventoryValidate.checkUpdateData,         // Check validation results
+    inventoryValidate.checkUpdateData,      // Check validation results
     utilities.handleErrors(inventoryController.processUpdateInventory)
 );
 
@@ -136,6 +136,30 @@ utilities.handleErrors(inventoryController.buildDetail))
 router.get(
     "/broken",
     utilities.handleErrors(inventoryController.throwError)
+)/* ... (rest of the file) ... */
+
+/* ****************************************
+ * Route to build vehicle detail view (Existing)
+ * **************************************** */
+router.get("/detail/:inv_id", 
+utilities.handleErrors(inventoryController.buildDetail))
+
+// ----------------------------------------------------------------------------------
+// --- NEW POST ROUTE FOR REVIEW SUBMISSION ---
+// ----------------------------------------------------------------------------------
+
+/* ************************************
+ * Route to process the new review submission
+ * URL: /inv/add-review
+ * ************************************ */
+router.post(
+    "/add-review", 
+    utilities.checkLogin, // Ensure the user is logged in
+    reviewValidate.reviewRules(), // 2. Server-side validation rules for rating/review text
+    reviewValidate.checkReviewData, // 3. Check validation results (reloads page on error)
+    utilities.handleErrors(reviewController.addReview) // Passes control to the new controller function
 )
+
+// ----------------------------------------------------------------------------------
 
 module.exports = router;

@@ -1,0 +1,39 @@
+<div id="wrapper">
+    <div class="delete-review-container form-container">
+
+        <% if (title) { %>
+            <h1><%= title %></h1>
+        <% } %>
+
+        <%- messages() %>
+
+        <div class="delete-warning">
+            <p><strong>Warning:</strong> Deleting this review is permanent and cannot be undone.</p>
+            <p>Please confirm you want to delete the following review:</p>
+        </div>
+
+        <section class="review-details-section">
+            <h2>Review Details</h2>
+            <ul class="detail-list">
+                <li><strong>Review ID:</strong> <%= review_id %></li>
+                <li><strong>Item Reviewed:</strong> <%= inv_make %> <%= inv_model %></li>
+                <li><strong>Date Submitted:</strong> <%= reviewDate %></li>
+                <li><strong>Rating:</strong> <%= review_rating %> / 5</li>
+            </ul>
+            
+            <p class="review-body"><strong>Review Text:</strong></p>
+            <blockquote class="review-quote"><%= review_text %></blockquote>
+        </section>
+        
+        <hr>
+
+        <section class="delete-form-section">
+            <form id="deleteReviewForm" action="/review/delete" method="post" class="review-form">
+
+                <button type="submit" class="form-submit-btn delete-btn">Confirm Deletion</button>
+
+                <input type="hidden" name="review_id" value="<%= review_id %>">
+            </form>
+        </section>
+    </div>
+</div>

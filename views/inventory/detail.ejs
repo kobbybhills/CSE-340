@@ -1,6 +1,73 @@
 <% if (title) { %>
-<h1 class="page-heading"><%= title %></h1>
+  <h1 class="page-heading"><%= title %></h1>
 <% } %>
 
 <%# detailViewHTML variable holds the fully formatted, responsive HTML %>
 <%- detailViewHTML %>
+
+<hr>
+
+<h2>Customer Reviews</h2>
+
+<%- messages() %>
+
+<% if (errors && errors.array().length > 0) { %>
+  <ul class="error-list validation-errors">
+    <% errors.array().forEach(error => { %> 
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<div id="review-submission-section" class="update-container form-container">
+  <% if (locals.loggedin) { %>
+    <% if (locals.accountData && locals.accountData.account_id) { %>
+      <section class="review-form-section inventory-form">
+        <h3>Post a Review</h3>
+        <p>Logged in as: <strong><%= locals.accountData.account_firstname %></strong></p>
+
+        <form action="/inv/add-review" method="POST" id="review-form">
+
+          <div class="form-group">
+            <label for="rating" class="form-label">Rating (1-5):</label>
+            <input 
+              type="number" 
+              id="rating" 
+              name="rating" 
+              min="1" 
+              max="5" 
+              required 
+              value="5" 
+              class="form-input review-rating-input"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="review_text" class="form-label">Review:</label>
+            <textarea 
+              id="review_text" 
+              name="review_text" 
+              rows="4" 
+              required 
+              placeholder="Type your honest review here..." 
+              class="form-input">
+            </textarea>
+          </div>
+
+          <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+          <input type="hidden" name="user_id" value="<%= locals.accountData.account_id %>">
+
+          <button type="submit" class="form-submit-btn">Post Review</button>
+        </form>
+      </section>
+    <% } %>
+  <% } else { %>
+    <p>Please <a href="/account/login">log in</a> to leave a review.</p>
+  <% } %>
+</div>
+
+<hr>
+<div id="reviews-list">
+    <%- reviewListHtml %>
+</div>
+

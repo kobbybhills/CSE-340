@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model")
+const reviewModel = require("../models/review-model");
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
@@ -130,6 +131,42 @@ Util.buildSingleVehicleDisplay = async function (vehicle) {
 }
 
 
+
+/* ****************************************
+ * Middleware to check if user owns the review (or is Admin/Employee)
+ * ************************************ */
+Util.checkReviewOwnership = async (req, res, next) => {
+    // 1. Get the Review ID. It could come from the URL parameter (GET) or the form body (POST).
+    const review_id = req.params.reviewId || req.body.review_id;
+    if (!review_id) {
+        req.flash("error", "Error: Review ID missing from request.");
+        return res.redirect("/account");
+    }
+
+    // 2. Get the logged-in user's ID and type
+    const account_id = res.locals.accountData.account_id;
+    const account_type = res.locals.accountData.account_type;
+
+    // 3. Allow Admin/Employee to proceed regardless of ownership
+    if (account_type === 'Admin' || account_type === 'Employee') {
+        return next();
+    }
+    
+    // 4. Fetch the review data
+    const reviewData = await reviewModel.getReviewByReviewId(review_id);
+
+    // 5. Check if the review exists and if the user is the owner
+    if (reviewData && reviewData.user_id === account_id) {
+        // User is the owner, proceed
+        next();
+    } else {
+        // Review not found or user is NOT the owner (Client trying to manipulate another's review)
+        req.flash("error", "Access denied. You do not have permission to modify this review.");
+        return res.redirect("/account");
+    }
+};
+
+
 /* ****************************************
  * Middleware to check token validity
  * (Runs on every request to load account data if token is present)
@@ -169,6 +206,63 @@ Util.checkLogin = (req, res, next) => {
 }
 
 /* ****************************************
+ * Build the HTML table of reviews for the account management view
+ * **************************************** */
+Util.buildUserReviewTable = async function (reviews) {
+    
+    // If no reviews exist, show a notice
+    if (!reviews || reviews.length === 0) {
+        return '<p class="notice">You have not submitted any reviews yet.</p>';
+    }
+
+    // Begin building table markup
+    let table = `
+        <table class="review-management-table">
+            <thead>
+                <tr>
+                    <th>Reviewed Item</th>
+                    <th>Review Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    reviews.forEach(review => {
+        
+        // Format review date
+        const reviewDate = new Date(review.created_at).toLocaleDateString(
+            'en-US',
+            {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }
+        );
+
+        table += `
+            <tr>
+                <td>${review.inv_make} ${review.inv_model}</td>
+                <td>${reviewDate}</td>
+                <td>
+                    <a href="/review/edit/${review.review_id}" title="Click to edit">Edit</a>
+                    |
+                    <a href="/review/delete/${review.review_id}" title="Click to delete">Delete</a>
+                </td>
+            </tr>
+        `;
+    });
+
+    table += `
+            </tbody>
+        </table>
+    `;
+
+    return table;
+};
+
+
+/* ****************************************
  * Check Account Type Middleware (Task 2: Authorization)
  * (Used to restrict access to Employee/Admin pages)
  * ************************************ */
@@ -184,6 +278,40 @@ Util.checkAuthorization = (req, res, next) => {
         return res.redirect("/account/login"); 
     }
 }
+
+/* ****************************************
+ * Build the HTML display for vehicle reviews
+ * **************************************** */
+Util.buildReviewList = async function (reviews) {
+    if (!reviews || reviews.length === 0) {
+        return '<p class="notice">Be the first to leave a review!</p>';
+    }
+
+    let html = '<h3>All Reviews (' + reviews.length + ')</h3>';
+    html += '<ul class="review-list">';
+
+    reviews.forEach(review => {
+        // Format the review submission date
+        const reviewDate = new Date(review.created_at).toLocaleDateString(
+            'en-US',
+            { year: 'numeric', month: 'long', day: 'numeric' }
+        );
+
+        // Display the user's rating as stars (assuming 'rating' is 1-5)
+        const starRating = '⭐'.repeat(review.rating);
+
+        html += '<li>';
+        html += '<div class="review-header">';
+        html += `<p class="reviewer-name">${starRating} Reviewed by ${review.account_firstname} ${review.account_lastname.charAt(0)}.</p>`; // Displays "J." for last name
+        html += `<p class="review-date">Posted on: ${reviewDate}</p>`;
+        html += '</div>';
+        html += `<p class="review-body">${review.body}</p>`;
+        html += '</li>';
+    });
+
+    html += '</ul>';
+    return html;
+};
 
 
 /* ****************************************
